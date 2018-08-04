@@ -53,13 +53,63 @@ class TreeProblems:
                 pre_num = t.val
         return min_sub
 
+    """
+        给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+        例如：
+        输入: 二叉搜索树:
+                      5
+                    /   \
+                   2     13
+        输出: 转换为累加树:
+                     18
+                    /   \
+                  20     13
+        解法：按照右->根_>左的顺序进行遍历，值一直往前累加
+    """
+    def convertBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        result = root
+        stack = []
+        preNum = 0
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.right
+            if stack:
+                t = stack.pop()
+                tVal = t.val
+                t.val = tVal + preNum
+                preNum += tVal
+                root = t.left
+        return result
+
+    """
+        树的中序遍历方法
+    """
+    def inOrderTree(self, root):
+        stack = []
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            if stack:
+                t = stack.pop()
+                print(t.val, end=" ")
+                root = t.right
+        print()
+
 
 """
     测试
 """
 mp = TreeProblems()
 root = TreeNode(5)
-root.left = TreeNode(4)
-root.right = TreeNode(7)
+root.left = TreeNode(2)
+root.right = TreeNode(13)
 # root.right.left = TreeNode(2)
 # print(mp.get_minimum_difference(root))
+mp.inOrderTree(root)
+mp.inOrderTree(mp.convertBST(root))
