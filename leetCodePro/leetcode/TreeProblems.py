@@ -6,6 +6,7 @@
 
 
 import sys
+import queue
 
 
 class TreeNode:
@@ -66,6 +67,7 @@ class TreeProblems:
                   20     13
         解法：按照右->根_>左的顺序进行遍历，值一直往前累加
     """
+
     def convertBST(self, root):
         """
         :type root: TreeNode
@@ -89,6 +91,7 @@ class TreeProblems:
     """
         树的中序遍历方法
     """
+
     def inOrderTree(self, root):
         stack = []
         while root or stack:
@@ -101,15 +104,87 @@ class TreeProblems:
                 root = t.right
         print()
 
+    """
+    给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过根结点。
+    示例 :
+    给定二叉树
+              1
+             / \
+            2   3
+           / \     
+          4   5    
+    返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+    注意：两结点之间的路径长度是以它们之间边的数目表示。
+    """
+
+    def diameterOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if root is None:
+            return 0
+        main_len = self.tree_depth(root.left) + self.tree_depth(root.right)
+        left_len = self.diameterOfBinaryTree(root.left)
+        right_len = self.diameterOfBinaryTree(root.right)
+        return max(left_len, right_len, main_len)
+
+    def tree_depth(self, root):
+        """
+        树的深度
+        :param root:
+        :return:
+        """
+        if root is None:
+            return 0
+        return max(1 + self.tree_depth(root.left), 1 + self.tree_depth(root.right))
+
+    """
+        根据数组创建二叉树
+    """
+    def array_to_tree(self, root_arr):
+        """
+        根据数组创建二叉树
+        :param root_arr: 数组
+        :return:
+        """
+        if root_arr is None or len(root_arr) == 0:
+            return None
+        root = TreeNode(root_arr[0])
+        tree_queue = queue.Queue()
+        tree_queue.put(root)
+        for idx in range(1, len(root_arr), 2):
+            node = tree_queue.get()
+            if node is None:
+                continue
+            left_val = root_arr[idx]
+            idx += 1
+            if idx < len(root_arr):
+                right_val = root_arr[idx]
+            if left_val is not None:
+                node.left = TreeNode(left_val)
+                tree_queue.put(node.left)
+            if right_val is not None:
+                node.right = TreeNode(right_val)
+                tree_queue.put(node.right)
+        return root
+
 
 """
     测试
 """
-mp = TreeProblems()
-root = TreeNode(5)
-root.left = TreeNode(2)
-root.right = TreeNode(13)
-# root.right.left = TreeNode(2)
-# print(mp.get_minimum_difference(root))
-mp.inOrderTree(root)
-mp.inOrderTree(mp.convertBST(root))
+if __name__ == "__main__":
+    mp = TreeProblems()
+    root_arr = [4, -7, -3, None, None, -9, -3, 9, -7, -4, None, 6, None, -6, -6, None, None, 0, 6, 5, None, 9, None,
+                None, -1, -4, None, None, None, -2]
+    root = mp.array_to_tree(root_arr)
+    # root = TreeNode(1)
+    # root.left = TreeNode(2)
+    # root.right = TreeNode(3)
+    # root.left.left = TreeNode(4)
+    # root.left.right = TreeNode(5)
+    # root.right.left = TreeNode(2)
+    # print(mp.get_minimum_difference(root))
+    mp.inOrderTree(root)
+    # mp.inOrderTree(mp.convertBST(root))
+    print(mp.diameterOfBinaryTree(root))
