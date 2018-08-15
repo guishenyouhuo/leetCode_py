@@ -80,6 +80,24 @@ class StringProblems:
                 return False
         return True
 
+    """
+    给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+    示例 1:
+    输入: "Let's take LeetCode contest"
+    输出: "s'teL ekat edoCteeL tsetnoc" 
+    注意：在字符串中，每个单词由单个空格分隔，并且字符串中不会有任何额外的空格。
+    """
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        ans = s.split()
+        res = []
+        for item in ans:
+            res.append(item[::-1])
+        return ' '.join(res)
+
 
 """
     测试
@@ -97,4 +115,9 @@ if __name__ == "__main__":
     #                     "mwtmzcysppmffnskvfabunfzsibqrerfstonzjhtcpnscpteflsnmqqphelpngnlnczritcjxewlhftujrpaeaxylqkswaisvzg"
     #                     "ciaemvodvcnqtuwcjkmzjzkikaqifymwwlvyxndgwwlauwiyiflgoahyaavkudvemfftzwlxdltwicouwboeaddxmvind", 22))
 
+    str1 = "wangfei"
+    ch_list = list(str1)
+    print(ch_list)
+    print("".join(ch_list))
+    print(sp.reverseWords("Let's take LeetCode contest"))
     print(sp.checkRecord("LPLPLPLPLPL"))
