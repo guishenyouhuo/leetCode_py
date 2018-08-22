@@ -16,6 +16,16 @@ class TreeNode:
         self.right = None
 
 
+class Node:
+    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+
+
 class TreeProblems:
     """
         给定一个所有节点为非负值的二叉搜索树，求树中任意两节点的差的绝对值的最小值。
@@ -168,6 +178,27 @@ class TreeProblems:
                 node.right = TreeNode(right_val)
                 tree_queue.put(node.right)
         return root
+
+    def intersect(self, quadTree1, quadTree2):
+        """
+        :type quadTree1: Node
+        :type quadTree2: Node
+        :rtype: Node
+        """
+        if quadTree1.isLeaf:
+            return quadTree1 if quadTree1.val else quadTree2
+        elif quadTree2.isLeaf:
+            return quadTree2 if quadTree2.val else quadTree1
+        else:
+            tLeft = self.intersect(quadTree1.topLeft, quadTree2.topLeft)
+            tRight = self.intersect(quadTree1.topRight, quadTree2.topRight)
+            bLeft = self.intersect(quadTree1.bottomLeft, quadTree2.bottomLeft)
+            bRight = self.intersect(quadTree1.bottomRight, quadTree2.bottomRight)
+
+            if tLeft.isLeaf and tRight.isLeaf and bLeft.isLeaf and bRight.isLeaf and tLeft.val == tRight.val == bLeft.val == bRight.val:
+                return Node(tLeft.val, True, None, None, None, None)
+            else:
+                return Node(False, False, tLeft, tRight, bLeft, bRight)
 
 
 """
